@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: happy-games-cup
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: echo Ready
+    startCommand: npm start
+    healthCheckPath: /health
