@@ -1,7 +1,7 @@
 #!/bin/bash
 set -u
 cd "$(dirname "$0")"
-BUILD_VERSION="0.7.2.1"
+BUILD_VERSION="0.7.3"
 if ! command -v node >/dev/null 2>&1; then
   echo
   echo "Node.js 18+ is required."

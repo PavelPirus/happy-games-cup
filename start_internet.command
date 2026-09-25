@@ -2,7 +2,7 @@
 set -u
 cd "$(dirname "$0")"
 
-BUILD_VERSION="0.7.2.1"
+BUILD_VERSION="0.7.3"
 START_PORT=${PORT:-8787}
 PORT="$START_PORT"
 SERVER_PID=""
@@ -78,7 +78,7 @@ for i in $(seq 1 50); do
     break
   fi
   HEALTH="$(curl -fsS "http://127.0.0.1:${PORT}/health" 2>/dev/null || true)"
-  if printf '%s' "$HEALTH" | grep -q '"ok":true' && printf '%s' "$HEALTH" | grep -q '"version":"0.7.2.1"'; then
+  if printf '%s' "$HEALTH" | grep -q '"ok":true' && printf '%s' "$HEALTH" | grep -q '"version":"0.7.3"'; then
     READY=1
     break
   fi

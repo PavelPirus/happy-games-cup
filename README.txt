@@ -1,4 +1,4 @@
-HAPPY GAMES CUP - CORPORATE CHAOS v0.7.2.1
+HAPPY GAMES CUP - CORPORATE CHAOS v0.7.3
 ==============================
 
 WHAT CHANGED
@@ -28,7 +28,7 @@ A) Put this folder into a GitHub repository
 1. Go to https://github.com/new
 2. Create a repository, for example: happy-games-cup
 3. Open the new repository and choose Add file -> Upload files.
-4. Drag ALL files from this v0.7.2.1 folder into the repository root.
+4. Drag ALL files from this v0.7.3 folder into the repository root.
    Important: render.yaml, package.json, server.js and index.html should be at the top level.
 5. Commit the files.
 
@@ -65,7 +65,7 @@ No npm packages are required; the WebSocket server is built with Node.js standar
 
 TAILSCALE FALLBACK
 ------------------
-start_internet.command is still included. It runs the same v0.7.2.1 game from Pavel's Mac
+start_internet.command is still included. It runs the same v0.7.3 game from Pavel's Mac
 through Tailscale Funnel. For Russia <-> Thailand testing, the Frankfurt Render deploy
 should usually be the better architecture.
 

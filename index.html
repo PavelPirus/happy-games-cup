@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Happy Games Cup v0.7.2.1 - Corporate Chaos Cup</title>
+<title>Happy Games Cup v0.7.3 - Bag Ball Edition</title>
 <style>
   :root{color-scheme:dark;--bg:#050a14;--panel:#0d1b36;--panel2:#10213f;--line:#d8e7ff;--blue:#49a8ff;--red:#ff6657;--green:#58df72;--yellow:#ffd76a;--muted:#8da6c9}
   *{box-sizing:border-box}
@@ -44,8 +44,8 @@
 <div class="wrap" id="app">
   <div class="topbar">
     <div>
-      <div class="title">HAPPY GAMES CUP // CORPORATE CHAOS 3v3 <span style="font-size:.55em;color:#8da6c9">v0.7.2.1</span></div>
-      <div class="sub">Irina + Yulia + Pavel vs three ridiculous corporate-party rivals. Each person controls one character.</div>
+      <div class="title">HAPPY GAMES CUP // CORPORATE CHAOS 3v3 <span style="font-size:.55em;color:#8da6c9">v0.7.3</span></div>
+      <div class="sub">Irina + Yulia + Pavel vs a ridiculous corporate-party trio. Now with a flying plastic bag instead of a ball.</div>
     </div>
     <div class="top-actions"><span class="ping-pill" id="pingPill">PING --</span><button class="sound-top" id="soundBtn" type="button" aria-pressed="true">🔊 SFX ON</button><div class="status"><span class="dot warn" id="netDot"></span><span id="netText">Choose your character</span></div></div>
   </div>
@@ -92,7 +92,7 @@
   let ballTrail=[];
 
   // Tiny procedural 8-bit sound engine. No audio files are needed.
-  // v0.7.2: corporate-party enemy roster swap.
+  // v0.7.3: plastic bag ball + metalhead rename.
   let audioCtx=null,soundEnabled=true,lastBallSfxAt=0;
   function getAudio(){
     if(!soundEnabled)return null;
@@ -162,7 +162,7 @@
   const enemyRoster=[
     {name:'ДЕДУЛЯ',skin:'#e1b08b',skin2:'#c79674',hair:'#d8d8d8',hair2:'#8d8d8d',vest:'#70755f',vest2:'#8c9278',shorts:'#5f8269',shoe:'#3d322b'},
     {name:'ДИВА',skin:'#efc1a2',skin2:'#d99a7d',hair:'#5a2e1e',hair2:'#8f4a2f',dress:'#c03a6e',dress2:'#f3c6da',lip:'#c52856',eye:'#5fa5d1'},
-    {name:'ГЛЭМ МЕТАЛ',skin:'#e8c3a5',skin2:'#c79173',hair:'#101114',hair2:'#2d2f37',outfit:'#1b1b22',outfit2:'#5c1122',paint:'#f7f5ef',paint2:'#111111',lip:'#b91f2d'}
+    {name:'МЕТАЛЛИСТ',skin:'#e8c3a5',skin2:'#c79173',hair:'#101114',hair2:'#2d2f37',outfit:'#1b1b22',outfit2:'#5c1122',paint:'#f7f5ef',paint2:'#111111',lip:'#b91f2d'}
   ];
 
   function setNet(mode,text){netDot.className='dot '+mode;netText.textContent=text;}
@@ -384,8 +384,44 @@
   }
 
   function drawBall(b){
-    if(!b)return;ballTrail.unshift({x:b.x,y:b.y});if(ballTrail.length>7)ballTrail.pop();for(let i=ballTrail.length-1;i>=1;i--){const t=ballTrail[i];ctx.globalAlpha=(7-i)*.05;px(t.x-4,t.y-4,8,8,'#d7f1ff');}ctx.globalAlpha=1;
-    const x=Math.round(b.x),y=Math.round(b.y),r=b.r||11;ctx.fillStyle='#f8f6e9';ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#216ed0';ctx.lineWidth=4;ctx.beginPath();ctx.arc(x-2,y-1,r-3,-1.3,.5);ctx.stroke();ctx.beginPath();ctx.arc(x+4,y+4,r-4,2.0,4.6);ctx.stroke();ctx.lineWidth=1;
+    if(!b)return;
+    ballTrail.unshift({x:b.x,y:b.y,vx:b.vx||0,vy:b.vy||0});
+    if(ballTrail.length>7)ballTrail.pop();
+    for(let i=ballTrail.length-1;i>=1;i--){
+      const t=ballTrail[i],up=t.vy<0;
+      const tw=up?14:10, th=up?9:14;
+      ctx.globalAlpha=(7-i)*.045;
+      px(t.x-Math.round(tw/2),t.y-Math.round(th/2),tw,th,'#e8f5ff');
+    }
+    ctx.globalAlpha=1;
+    const x=Math.round(b.x),y=Math.round(b.y),up=(b.vy||0)<-1,down=(b.vy||0)>1;
+    const baseW=18,baseH=18;
+    const w=up?22:(down?14:18);
+    const h=up?14:(down?24:18);
+    const left=x-Math.round(w/2), top=y-Math.round(h/2);
+    const sway=Math.max(-2,Math.min(2,Math.round((b.vx||0)/90)));
+    // soft shadow
+    px(left+2,top+2,w,h,'#00000033');
+    // plastic body
+    px(left,top+2,w,h-4,'#f1f6fb');
+    px(left+1,top+1,w-2,h-2,'#f8fbff');
+    // side seams and bottom fold
+    px(left,top+3,2,h-6,'#c9d7e7');
+    px(left+w-2,top+3,2,h-6,'#c9d7e7');
+    px(left+2,top+h-4,w-4,2,'#d7e3ef');
+    // inner handles cutout area
+    px(left+3,top+2,4,4,'#06112b');
+    px(left+w-7,top+2,4,4,'#06112b');
+    // handles
+    px(left+1+sway,top,5,3,'#eef6ff');
+    px(left+w-6+sway,top,5,3,'#eef6ff');
+    px(left+2+sway,top+1,3,4,'#dce7f3');
+    px(left+w-5+sway,top+1,3,4,'#dce7f3');
+    // crinkle highlights
+    px(left+4,top+6,2,5,'#d4e1ed');
+    px(left+w-6,top+8,2,5,'#d4e1ed');
+    px(left+Math.round(w/2)-1,top+6,2,h-10,'#e6eef7');
+    px(left+6,top+h-8,w-12,2,'#edf3f9');
   }
 
   function interpPlayer(a,b,t){if(!a)return b;if(!b)return a;return {...b,x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,vx:b.vx,vy:b.vy,walk:a.walk+(b.walk-a.walk)*t};}

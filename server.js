@@ -7,7 +7,7 @@ const os = require('os');
 const crypto = require('crypto');
 
 const PORT = Number(process.env.PORT) || 8787;
-const BUILD_VERSION = '0.7.2.1';
+const BUILD_VERSION = '0.7.3';
 const ROOT = __dirname;
 
 const W = 960, H = 540;
@@ -688,7 +688,7 @@ setInterval(() => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log('\n==============================================');
-  console.log(' HAPPY GAMES CUP v0.7.2.1 - CORPORATE CHAOS 3v3');
+  console.log(' HAPPY GAMES CUP v0.7.3 - CORPORATE CHAOS 3v3 // BAG BALL EDITION');
   console.log('==============================================');
   console.log(`This Mac:  http://localhost:${PORT}`);
   const nets = os.networkInterfaces();
