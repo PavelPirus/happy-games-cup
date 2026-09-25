@@ -1,8 +1,8 @@
 {
   "name": "happy-games-cup-online",
-  "version": "0.7.0",
+  "version": "0.7.2.1",
   "private": true,
-  "description": "Happy Games Cup Christmas online 3v3 pixel volleyball - cloud/WebSocket build",
+  "description": "Happy Games Cup Corporate Chaos online 3v3 pixel volleyball - cloud/WebSocket build",
   "scripts": {
     "start": "node server.js"
   },

@@ -7,7 +7,7 @@ const os = require('os');
 const crypto = require('crypto');
 
 const PORT = Number(process.env.PORT) || 8787;
-const BUILD_VERSION = '0.7.0';
+const BUILD_VERSION = '0.7.2.1';
 const ROOT = __dirname;
 
 const W = 960, H = 540;
@@ -207,6 +207,12 @@ function scorePoint(room, winner) {
 function updateBall(room, dt) {
   const ball = room.ball;
   ball.lock = Math.max(0, ball.lock - dt);
+
+  // Keep the previous position so net collisions can resolve from the side
+  // the ball actually came from instead of pinning it inside the net.
+  const prevX = ball.x;
+  const prevY = ball.y;
+
   ball.vy += GRAVITY * 0.68 * dt;
   ball.x += ball.vx * dt;
   ball.y += ball.vy * dt;
@@ -215,20 +221,57 @@ function updateBall(room, dt) {
   if (ball.x > W - 24 - ball.r) { ball.x = W - 24 - ball.r; ball.vx = -Math.abs(ball.vx) * 0.82; }
   if (ball.y < 112 + ball.r) { ball.y = 112 + ball.r; ball.vy = Math.abs(ball.vy) * 0.75; }
 
-  if (ball.y + ball.r > NET_TOP && ball.y - ball.r < FLOOR) {
-    if (ball.x < NET_X && ball.x + ball.r > NET_X - 7) {
-      ball.x = NET_X - 7 - ball.r;
-      ball.vx = -Math.abs(ball.vx) * 0.72;
-    } else if (ball.x > NET_X && ball.x - ball.r < NET_X + 7) {
-      ball.x = NET_X + 7 + ball.r;
-      ball.vx = Math.abs(ball.vx) * 0.72;
+  const NET_HALF = 7;
+  const NET_KICK = 125;
+  const NET_BOUNCE_Y = 185;
+  const topY = NET_TOP - ball.r - 2;
+  const leftX = NET_X - NET_HALF - ball.r;
+  const rightX = NET_X + NET_HALF + ball.r;
+
+  // Hit the top/cap of the net. A small guaranteed horizontal kick prevents
+  // the ball from balancing forever on the exact center of the net.
+  const overNetTop = Math.abs(ball.x - NET_X) <= ball.r + NET_HALF + 4;
+  const crossedTop = prevY + ball.r <= NET_TOP + 3 && ball.y + ball.r >= NET_TOP - 2;
+  if (overNetTop && crossedTop && ball.vy > 0) {
+    ball.y = topY;
+    ball.vy = -Math.max(Math.abs(ball.vy) * 0.74, NET_BOUNCE_Y);
+
+    let pushDir;
+    if (Math.abs(ball.vx) > 18) pushDir = Math.sign(ball.vx);
+    else if (Math.abs(ball.x - NET_X) > 1) pushDir = Math.sign(ball.x - NET_X);
+    else if (Math.abs(prevX - NET_X) > 1) pushDir = Math.sign(prevX - NET_X);
+    else pushDir = room.serveTeam === 0 ? 1 : -1;
+
+    ball.vx = pushDir * Math.max(Math.abs(ball.vx) * 0.94, NET_KICK);
+  } else if (ball.y + ball.r > NET_TOP && ball.y - ball.r < FLOOR) {
+    // Hit either vertical side of the net. Resolve using the previous side and
+    // guarantee enough horizontal speed to separate cleanly on the next tick.
+    const cameFromLeft = prevX <= NET_X - NET_HALF;
+    const cameFromRight = prevX >= NET_X + NET_HALF;
+
+    if ((cameFromLeft || ball.x < NET_X) && ball.x + ball.r > NET_X - NET_HALF && ball.x <= NET_X) {
+      ball.x = leftX;
+      ball.vx = -Math.max(Math.abs(ball.vx) * 0.76, NET_KICK);
+    } else if ((cameFromRight || ball.x > NET_X) && ball.x - ball.r < NET_X + NET_HALF && ball.x >= NET_X) {
+      ball.x = rightX;
+      ball.vx = Math.max(Math.abs(ball.vx) * 0.76, NET_KICK);
+    } else if (Math.abs(ball.x - NET_X) <= NET_HALF + ball.r) {
+      // Emergency depenetration for a frame that lands exactly in the middle.
+      const pushDir = ball.vx !== 0 ? Math.sign(ball.vx) : (prevX < NET_X ? -1 : 1);
+      ball.x = pushDir < 0 ? leftX : rightX;
+      ball.vx = pushDir * Math.max(Math.abs(ball.vx), NET_KICK);
     }
   }
 
-  if (Math.abs(ball.x - NET_X) < ball.r + 12 && ball.y + ball.r > NET_TOP - 8 && ball.y < NET_TOP + 14 && ball.vy > 0) {
-    ball.y = NET_TOP - ball.r - 7;
-    ball.vy = -Math.abs(ball.vy) * 0.72;
-    ball.vx *= 0.92;
+  // Extra anti-stall safety: if numerical rounding leaves a very slow ball
+  // sitting directly above the cap, kick it gently to one side.
+  if (Math.abs(ball.x - NET_X) < ball.r + NET_HALF + 2 &&
+      Math.abs((ball.y + ball.r) - NET_TOP) < 7 &&
+      Math.abs(ball.vx) < 55 && Math.abs(ball.vy) < 95) {
+    const pushDir = ball.x < NET_X ? -1 : (ball.x > NET_X ? 1 : (room.serveTeam === 0 ? 1 : -1));
+    ball.vx = pushDir * NET_KICK;
+    ball.vy = -NET_BOUNCE_Y;
+    ball.y = topY;
   }
 
   for (const p of room.leftPlayers) collidePlayer(room, p);
@@ -645,7 +688,7 @@ setInterval(() => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log('\n==============================================');
-  console.log(' HAPPY GAMES CUP v0.7 - CLOUD READY 3v3');
+  console.log(' HAPPY GAMES CUP v0.7.2.1 - CORPORATE CHAOS 3v3');
   console.log('==============================================');
   console.log(`This Mac:  http://localhost:${PORT}`);
   const nets = os.networkInterfaces();

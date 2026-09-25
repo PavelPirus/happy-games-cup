@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Happy Games Cup v0.7.0 - Online Pixel Volleyball</title>
+<title>Happy Games Cup v0.7.2.1 - Corporate Chaos Cup</title>
 <style>
   :root{color-scheme:dark;--bg:#050a14;--panel:#0d1b36;--panel2:#10213f;--line:#d8e7ff;--blue:#49a8ff;--red:#ff6657;--green:#58df72;--yellow:#ffd76a;--muted:#8da6c9}
   *{box-sizing:border-box}
@@ -44,14 +44,14 @@
 <div class="wrap" id="app">
   <div class="topbar">
     <div>
-      <div class="title">HAPPY GAMES CUP // CHRISTMAS 3v3 <span style="font-size:.55em;color:#8da6c9">v0.7.0</span></div>
-      <div class="sub">Irina + Yulia + Pavel vs three evil Christmas trees. Each person controls one character.</div>
+      <div class="title">HAPPY GAMES CUP // CORPORATE CHAOS 3v3 <span style="font-size:.55em;color:#8da6c9">v0.7.2.1</span></div>
+      <div class="sub">Irina + Yulia + Pavel vs three ridiculous corporate-party rivals. Each person controls one character.</div>
     </div>
     <div class="top-actions"><span class="ping-pill" id="pingPill">PING --</span><button class="sound-top" id="soundBtn" type="button" aria-pressed="true">🔊 SFX ON</button><div class="status"><span class="dot warn" id="netDot"></span><span id="netText">Choose your character</span></div></div>
   </div>
 
   <div class="game-shell">
-    <canvas id="game" width="960" height="540" tabindex="0" aria-label="Happy Games Cup online pixel volleyball"></canvas>
+    <canvas id="game" width="960" height="540" tabindex="0" aria-label="Happy Games Cup online corporate chaos volleyball"></canvas>
     <div class="lobby" id="lobby">
       <div class="lobby-card">
         <h2>HAPPY GAMES CUP</h2>
@@ -92,7 +92,7 @@
   let ballTrail=[];
 
   // Tiny procedural 8-bit sound engine. No audio files are needed.
-  // v0.7.0: audio is explicitly unlocked from a real click/key gesture for Safari/Chrome.
+  // v0.7.2: corporate-party enemy roster swap.
   let audioCtx=null,soundEnabled=true,lastBallSfxAt=0;
   function getAudio(){
     if(!soundEnabled)return null;
@@ -160,9 +160,9 @@
     {name:'PAVEL',hair:'#75412b',hair2:'#9a5d3c',skin:'#dfad89',shirt:'#20242b',shirt2:'#454d58',eye:'#7b9caf',hat:false}
   ];
   const enemyRoster=[
-    {name:'ЁЛКИН ПАЛКИН 1',green:'#176c39',green2:'#24934c',ornament:'#ef4949',eye:'#ff4b42',star:'#ffd35c'},
-    {name:'ЁЛКИН ПАЛКИН 2',green:'#0d6334',green2:'#2b9e55',ornament:'#ffd35c',eye:'#ffd35c',star:'#ff675e'},
-    {name:'ЁЛКИН ПАЛКИН 3',green:'#195b3c',green2:'#2b8754',ornament:'#75c8ff',eye:'#84e8ff',star:'#f0f5ff'}
+    {name:'ДЕДУЛЯ',skin:'#e1b08b',skin2:'#c79674',hair:'#d8d8d8',hair2:'#8d8d8d',vest:'#70755f',vest2:'#8c9278',shorts:'#5f8269',shoe:'#3d322b'},
+    {name:'ДИВА',skin:'#efc1a2',skin2:'#d99a7d',hair:'#5a2e1e',hair2:'#8f4a2f',dress:'#c03a6e',dress2:'#f3c6da',lip:'#c52856',eye:'#5fa5d1'},
+    {name:'ГЛЭМ МЕТАЛ',skin:'#e8c3a5',skin2:'#c79173',hair:'#101114',hair2:'#2d2f37',outfit:'#1b1b22',outfit2:'#5c1122',paint:'#f7f5ef',paint2:'#111111',lip:'#b91f2d'}
   ];
 
   function setNet(mode,text){netDot.className='dot '+mode;netText.textContent=text;}
@@ -311,53 +311,48 @@
     const r=enemyRoster[slot];
     px(x,y,74,58,'#050a12');px(x,y,74,3,border);px(x,y+55,74,3,border);px(x,y,3,58,border);px(x+71,y,3,58,border);
     const cx=x+37;
-    // crooked star / topper
-    px(cx-2,y+5,5,7,r.star);px(cx-6,y+8,13,3,r.star);px(cx-1,y+2,3,12,r.star);
-    // simple triangular tree silhouette
-    px(cx-8,y+11,16,7,r.green2);px(cx-13,y+17,26,8,r.green);px(cx-18,y+24,36,8,r.green2);px(cx-23,y+31,46,10,r.green);px(cx-27,y+39,54,9,r.green2);
-    // angry face
-    px(cx-12,y+27,8,3,r.eye);px(cx+4,y+27,8,3,r.eye);px(cx-9,y+30,5,3,r.eye);px(cx+4,y+30,5,3,r.eye);
-    px(cx-8,y+36,16,3,'#10170f');px(cx-5,y+39,3,3,'#f6f0de');px(cx+2,y+39,3,3,'#f6f0de');
-    // ornaments + trunk
-    px(cx-19,y+34,5,5,r.ornament);px(cx+15,y+38,5,5,r.ornament);px(cx-4,y+20,4,4,r.ornament);px(cx-5,y+47,10,7,'#70462b');
+    if(slot===0){
+      // chubby grandpa in cargo vest
+      px(cx-14,y+8,28,8,r.hair);px(cx-10,y+14,20,18,r.skin);px(cx-8,y+22,4,4,'#3a2a24');px(cx+4,y+22,4,4,'#3a2a24');px(cx-7,y+29,14,3,'#e8e1da');
+      px(cx-16,y+33,32,14,r.vest);px(cx-12,y+36,8,8,r.vest2);px(cx+4,y+36,8,8,r.vest2);px(cx-7,y+47,14,7,r.shorts);
+    } else if(slot===1){
+      // elegant lady in dress and makeup
+      px(cx-13,y+9,26,10,r.hair);px(cx-15,y+17,8,21,r.hair);px(cx+7,y+17,8,21,r.hair2);px(cx-10,y+18,20,17,r.skin);
+      px(cx-6,y+24,3,3,r.eye);px(cx+3,y+24,3,3,r.eye);px(cx-3,y+29,6,2,r.lip);px(cx-14,y+36,28,12,r.dress);px(cx-9,y+32,18,5,r.dress2);px(cx-18,y+47,36,7,r.dress);
+    } else {
+      // glam metal rocker inspired by face paint
+      px(cx-16,y+7,32,9,r.hair);px(cx-19,y+13,10,21,r.hair2);px(cx+9,y+13,10,21,r.hair2);px(cx-11,y+15,22,18,r.paint);
+      px(cx-10,y+20,8,6,r.paint2);px(cx+2,y+20,8,6,r.paint2);px(cx-6,y+29,12,2,r.lip);px(cx-15,y+36,30,11,r.outfit);px(cx-18,y+47,36,7,r.outfit2);
+    }
   }
 
-  function drawTreePlayer(p,slot){
+  function drawEnemyPlayer(p,slot){
     const r=enemyRoster[slot],x=Math.round(p.x),y=Math.round(p.y),bob=p.onGround?Math.round(Math.sin(p.walk)*2):0,cy=y-45+bob;
     const sh=Math.max(14,30+Math.round((y-FLOOR)*.08));px(x-sh/2,FLOOR+4,sh,5,'#563c2b77');
-    // tiny trunk legs / shoes
     const legSwing=p.onGround?Math.round(Math.sin(p.walk)*3):2;
-    px(x-10,cy+36,7,12+legSwing,'#70462b');px(x+3,cy+36,7,12-legSwing,'#70462b');
-    px(x-12,cy+46+legSwing,11,5,'#29251f');px(x+2,cy+46-legSwing,11,5,'#29251f');
-    // branch arms, raised during hit
-    if(p.hitTimer>0){
-      const dir=p.facing>0?1:-1;
-      px(x+(dir>0?13:-23),cy+5,10,6,r.green2);px(x+(dir>0?19:-29),cy-5,7,14,r.green);
-    }else{
-      px(x-23,cy+19,12,6,r.green);px(x+11,cy+19,12,6,r.green);
+    if(slot===0){
+      // grandpa
+      px(x-12,cy+26,9,15+legSwing,r.skin2);px(x+3,cy+26,9,15-legSwing,r.skin2);px(x-13,cy+40+legSwing,11,6,r.shoe);px(x+2,cy+40-legSwing,11,6,r.shoe);
+      if(p.hitTimer>0){const dir=p.facing>0?1:-1;px(x+(dir>0?14:-24),cy+1,11,6,r.skin2);px(x+(dir>0?23:-33),cy-4,8,6,r.skin2);} else {px(x-26,cy+8,12,6,r.skin2);px(x+14,cy+8,12,6,r.skin2);}
+      px(x-15,cy-14,30,10,r.hair);px(x-18,cy-5,36,23,r.skin);px(x-9,cy+5,5,5,'#3a2a24');px(x+4,cy+5,5,5,'#3a2a24');px(x-10,cy+14,20,3,'#e8e1da');
+      px(x-23,cy+19,46,18,r.vest);px(x-18,cy+23,11,10,r.vest2);px(x+7,cy+23,11,10,r.vest2);px(x-4,cy+19,8,18,'#c9a384');px(x-18,cy+37,36,11,r.shorts);
+    } else if(slot===1){
+      // diva
+      px(x-10,cy+30,7,17+legSwing,r.skin2);px(x+3,cy+30,7,17-legSwing,r.skin2);px(x-11,cy+46+legSwing,10,5,'#d84d86');px(x+2,cy+46-legSwing,10,5,'#d84d86');
+      if(p.hitTimer>0){const dir=p.facing>0?1:-1;px(x+(dir>0?12:-22),cy+5,10,5,r.skin2);px(x+(dir>0?20:-30),cy,7,5,r.skin2);} else {px(x-22,cy+12,10,5,r.skin2);px(x+12,cy+12,10,5,r.skin2);}      
+      px(x-14,cy-16,28,12,r.hair);px(x-16,cy-5,8,26,r.hair);px(x+8,cy-4,8,26,r.hair2);px(x-12,cy-2,24,20,r.skin);
+      px(x-7,cy+4,4,4,r.eye);px(x+3,cy+4,4,4,r.eye);px(x-4,cy+11,8,2,r.lip);px(x-14,cy+18,28,8,r.dress2);px(x-20,cy+26,40,19,r.dress);px(x-25,cy+39,50,9,r.dress);
+    } else {
+      // glam metal rocker
+      px(x-10,cy+31,7,16+legSwing,'#25262c');px(x+3,cy+31,7,16-legSwing,'#25262c');px(x-11,cy+46+legSwing,10,5,'#111');px(x+2,cy+46-legSwing,10,5,'#111');
+      if(p.hitTimer>0){const dir=p.facing>0?1:-1;px(x+(dir>0?12:-22),cy+3,11,6,r.paint);px(x+(dir>0?20:-30),cy-2,8,6,r.paint);} else {px(x-22,cy+10,10,6,r.paint);px(x+12,cy+10,10,6,r.paint);}      
+      px(x-17,cy-18,34,11,r.hair);px(x-21,cy-10,9,25,r.hair2);px(x+12,cy-10,9,25,r.hair2);px(x-12,cy-3,24,20,r.paint);
+      px(x-11,cy+2,8,6,r.paint2);px(x+3,cy+2,8,6,r.paint2);px(x-6,cy+11,12,2,r.lip);px(x-17,cy+18,34,10,r.outfit);px(x-22,cy+28,44,17,r.outfit);px(x-6,cy+18,12,27,r.outfit2);
     }
-    // layered triangular tree body
-    px(x-8,cy-25,16,8,r.green2);
-    px(x-14,cy-18,28,9,r.green);
-    px(x-20,cy-10,40,10,r.green2);
-    px(x-26,cy-1,52,11,r.green);
-    px(x-31,cy+9,62,12,r.green2);
-    px(x-35,cy+20,70,13,r.green);
-    px(x-31,cy+32,62,9,r.green2);
-    // top star
-    px(x-2,cy-34,5,9,r.star);px(x-7,cy-31,15,3,r.star);px(x-1,cy-38,3,14,r.star);
-    // evil face
-    px(x-15,cy+4,10,3,r.eye);px(x+5,cy+4,10,3,r.eye);px(x-11,cy+7,6,3,r.eye);px(x+5,cy+7,6,3,r.eye);
-    px(x-10,cy+14,20,3,'#0d160f');px(x-7,cy+17,4,4,'#fff5de');px(x+3,cy+17,4,4,'#fff5de');
-    // ornaments; each tree gets a slightly different pattern
-    const o=r.ornament;
-    if(slot===0){px(x-23,cy+14,6,6,o);px(x+17,cy+25,6,6,o);px(x+5,cy-8,5,5,o);}
-    if(slot===1){px(x-23,cy+25,6,6,o);px(x+18,cy+12,6,6,o);px(x-4,cy-9,5,5,o);px(x+2,cy+29,5,5,o);}
-    if(slot===2){px(x-24,cy+12,6,6,o);px(x+18,cy+26,6,6,o);px(x+10,cy-6,5,5,o);px(x-8,cy+27,5,5,o);}
   }
 
   function drawHud(s){
-    px(0,0,W,106,'#030812');px(0,103,W,3,'#506e9c');text('HAPPY GAMES TEAM',20,9,13,palette.blue);text('ЁЛКИН ПАЛКИН TEAM',940,9,13,palette.red,'right');
+    px(0,0,W,106,'#030812');px(0,103,W,3,'#506e9c');text('HAPPY GAMES TEAM',20,9,13,palette.blue);text('AFTERPARTY CHAOS TEAM',940,9,13,palette.red,'right');
     for(let i=0;i<3;i++){
       const x=18+i*86;drawPortrait(x,32,i,palette.blue);text(roster[i].name,x+37,92,10,'#dce9ff','center');
       if(s&&s.slots&&s.slots[i]){px(x+58,36,9,9,palette.green);if(i===mySlot)text('YOU',x+37,78,9,'#fff','center');}
@@ -369,7 +364,7 @@
   function drawArena(){
     px(0,106,W,160,palette.sky);
     for(let y=118;y<242;y+=18){for(let x=12+(y%36);x<W-10;x+=22){const k=((x*7+y*3)%5);const c=[palette.crowd1,palette.crowd2,palette.crowd3,'#a65f52','#8c7952'][k];px(x,y,9,9,c);px(x-3,y+8,15,8,c);}}
-    px(0,240,W,22,'#16305b');px(0,262,W,18,'#274f83');text('★ HAPPY GAMES CUP ★',250,246,18,'#adc7f2','center');text('★ CHRISTMAS 3v3 ★',730,246,17,'#adc7f2','center');
+    px(0,240,W,22,'#16305b');px(0,262,W,18,'#274f83');text('★ HAPPY GAMES CUP ★',250,246,18,'#adc7f2','center');text('★ CORPORATE CHAOS 3v3 ★',730,246,15,'#adc7f2','center');
     px(0,280,W,FLOOR-280,palette.out);px(48,302,864,FLOOR-302,palette.court);for(let y=316;y<FLOOR;y+=24)px(48,y,864,3,palette.court2);
     px(48,FLOOR-3,864,4,palette.line);px(48,302,4,FLOOR-302,palette.line);px(908,302,4,FLOOR-302,palette.line);px(250,302,3,FLOOR-302,'#ffe2c6');px(707,302,3,FLOOR-302,'#ffe2c6');
     px(NET_X-8,NET_TOP,16,FLOOR-NET_TOP+14,palette.post);px(NET_X-5,NET_TOP+4,10,FLOOR-NET_TOP+6,'#eaf2ff');for(let y=NET_TOP+7;y<FLOOR-8;y+=14)px(NET_X-38,y,76,2,'#dce5ef');for(let x=NET_X-36;x<=NET_X+36;x+=12)px(x,NET_TOP+6,2,FLOOR-NET_TOP-14,'#dce5ef');px(NET_X-42,NET_TOP-5,84,6,'#fff');
@@ -408,14 +403,14 @@
   function drawOverlay(s){
     if(!joined){px(310,190,340,86,'#020712bb');text('ONLINE TEAM MATCH',480,210,22,'#fff','center');text('CHOOSE A PLAYER TO JOIN',480,245,12,'#9fc5ff','center');return;}
     if(!s){px(330,190,300,70,'#020712dd');text('CONNECTING...',480,215,20,'#fff','center');return;}
-    if(s.state==='point'){px(330,190,300,68,'#020712dd');text(s.pointWinner===0?'POINT — HAPPY GAMES TEAM':'POINT — ЁЛКИН ПАЛКИН TEAM',480,210,20,'#fff','center');}
-    if(s.state==='gameover'){px(265,176,430,126,'#020712ee');text(s.scoreL>s.scoreR?'HAPPY GAMES TEAM WINS!':'ЁЛКИН ПАЛКИН TEAM WINS!',480,198,27,s.scoreL>s.scoreR?palette.blue:palette.red,'center');text(`${s.scoreL} - ${s.scoreR}`,480,238,26,'#fff','center');text('PRESS RESTART MATCH',480,270,13,'#c7d8ef','center');}
+    if(s.state==='point'){px(330,190,300,68,'#020712dd');text(s.pointWinner===0?'POINT — HAPPY GAMES TEAM':'POINT — AFTERPARTY CHAOS TEAM',480,210,20,'#fff','center');}
+    if(s.state==='gameover'){px(265,176,430,126,'#020712ee');text(s.scoreL>s.scoreR?'HAPPY GAMES TEAM WINS!':'AFTERPARTY CHAOS TEAM WINS!',480,198,27,s.scoreL>s.scoreR?palette.blue:palette.red,'center');text(`${s.scoreL} - ${s.scoreR}`,480,238,26,'#fff','center');text('PRESS RESTART MATCH',480,270,13,'#c7d8ef','center');}
   }
 
   function draw(){
     const now=performance.now(),dt=Math.min(.033,Math.max(.001,(now-lastFrameAt)/1000));lastFrameAt=now;advancePrediction(dt);
     const s=currentVisual();ctx.clearRect(0,0,W,H);drawHud(s);drawArena();
-    if(s){s.leftPlayers.forEach((p,i)=>drawPlayer(p,0,i,i===mySlot));s.rightPlayers.forEach((p,i)=>drawTreePlayer(p,i));drawBall(s.ball);if(joined)text(`ROOM ${room}  •  HAPPY GAMES TEAM vs ЁЛКИН ПАЛКИН TEAM`,480,514,11,'#c0d4ee','center');}
+    if(s){s.leftPlayers.forEach((p,i)=>drawPlayer(p,0,i,i===mySlot));s.rightPlayers.forEach((p,i)=>drawEnemyPlayer(p,i));drawBall(s.ball);if(joined)text(`ROOM ${room}  •  HAPPY GAMES TEAM vs AFTERPARTY CHAOS TEAM`,480,514,11,'#c0d4ee','center');}
     drawOverlay(s);requestAnimationFrame(draw);
   }
 
